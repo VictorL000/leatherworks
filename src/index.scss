@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 :root {
   --global-padding: 20px;
   --color-black: #0a0908;
@@ -16,6 +18,7 @@
     --global-padding: 5px;
   }
 }
+
 #root {
   display: flex;
   min-height: 100vh;
@@ -70,11 +73,17 @@
   bottom: 0px;
 }
 
+.hamburger,
+.search {
+  // height: 80px;
+  // width: 80px;
+}
 .hamburger img,
 .search img {
   height: 100%;
   width: 100%;
 }
+
 
 .item-page-container {
   max-width: 1150px;
@@ -85,70 +94,82 @@
   gap: 70px;
   padding: var(--global-padding);
   flex-wrap: wrap;
-}
-@media screen and (max-width: 550px) {
-  .item-page-container {
+
+  @media screen and (max-width: 550px) {
     padding: 5px;
   }
-}
-.item-page-container h1 {
-  @apply text-2xl;
-}
-.item-page-container .price {
-  @apply text-xl;
-}
-.item-page-container h2 {
-  @apply text-xl;
-}
-.item-page-container h3 {
-  @apply text-lg;
-}
-.item-page-container h4 {
-  @apply text-base;
-}
-.item-page-container h5 {
-  @apply text-sm;
-}
-.item-page-container .add-to-cart {
-  width: 100%;
-  padding: 20px;
-  margin: 20px 0px;
-}
-.item-page-container .img-container {
-  flex: 1 1 450px;
-  min-width: 320px;
-}
-@media screen and (max-width: 1000px) {
-  .item-page-container .img-container {
+    
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  .price {
+    @apply text-xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  h4 {
+    @apply text-base;
+  }
+
+  h5 {
+    @apply text-sm;
+  }
+
+  .add-to-cart {
+    width: 100%;
+    padding: 20px;
+    margin: 20px 0px;
+  }
+
+  .img-container {
+    flex: 1 1 450px;
+    min-width: 320px;
+    @media screen and (max-width: 1000px) {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+
+  .item-info {
+    min-width: 300px;
+    flex: 1 1 300px;
+  }
+
+  .separate {
+    border-top: 1px solid #D8D8D8;
+  }
+
+  .insights {
+    ul {
+      list-style: outside;
+      padding-left: 20px;
+    }
+    li {
+      margin: 10px 0px; 
+      @apply text-sm;
+    }
+  }
+
+  .feature {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    align-items: start;
+    flex-basis: 30%;
+    gap: 20px;
+    // text-align: center;
+    img {
+      width: 50px;
+    }
   }
-}
-.item-page-container .item-info {
-  min-width: 300px;
-  flex: 1 1 300px;
-}
-.item-page-container .separate {
-  border-top: 1px solid #D8D8D8;
-}
-.item-page-container .insights ul {
-  list-style: outside;
-  padding-left: 20px;
-}
-.item-page-container .insights li {
-  margin: 10px 0px;
-  @apply text-sm;
-}
-.item-page-container .feature {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  flex-basis: 30%;
-  gap: 20px;
-}
-.item-page-container .feature img {
-  width: 50px;
 }
 
 .item-container {
@@ -156,7 +177,7 @@
   min-width: 630px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-between; 
   /* DO A MEDIA QUERY  */
   margin: 20px 30px;
   gap: 20px;
@@ -164,26 +185,28 @@
 
 .item {
   width: 300px;
-  height: -moz-fit-content;
   height: fit-content;
+  // background-color: beige;
   padding: 20px;
   outline: 1px var(--color-black) solid;
-}
-.item .img-container {
-  margin: 20px 0px;
+
+
+  .img-container {
+    margin: 20px 0px;
+  }
 }
 
 .phantom {
-  background-color: white;
+  background-color: #ffffffff;
 }
 
 .item > .img-container > img {
   height: 300px;
   width: 300px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   margin: 0 auto;
 }
+
 
 .item-colors {
   display: flex;
@@ -195,6 +218,7 @@
 .item-colors > img {
   height: 20px;
 }
+
 
 .cart {
   position: fixed;
@@ -208,34 +232,40 @@
   align-items: center;
   outline: 1px var(--color-black) solid;
   gap: 30px;
-}
-.cart-header {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: space-between;
-  padding: 30px 30px;
-  min-height: 100px;
-  align-items: center;
-  margin-bottom: -20px;
-}
-.cart-item {
-  display: flex;
-  gap: 30px;
-  width: 80%;
-  padding: 10px 20px;
-  outline: 1px var(--color-black) solid;
-}
-.cart-item-image-container {
-  width: 60px;
-}
-.cart-item-text {
-  flex: 1 1 auto;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+
+  &-header {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 30px;
+    min-height: 100px;
+    align-items: center;
+    margin-bottom: -20px;
+  }
+
+  &-item {
+    display: flex;
+    gap: 30px;
+    width: 80%;
+    padding: 10px 20px;
+    outline: 1px var(--color-black) solid;
+  }
+
+  &-item-image-container {
+    width: 60px;
+  }
+
+  &-item-text {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
 }
 
 .disabled {
   display: none;
-}/*# sourceMappingURL=index.css.map */
+}
+
+// Resume: Emphasize Polish!!!!!!!

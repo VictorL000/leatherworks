@@ -5,7 +5,6 @@ import reactLogo from "./assets/react.svg";
 import "./output.css";
 import { Link } from "react-router-dom";
 
-
 function App() {
   return (
     <>
@@ -19,22 +18,22 @@ function App() {
 function Header() {
   return (
     <div className="header">
-      <div className="leftNav">
         <div className="hamburger">
           <img src={reactLogo} alt="" srcSet="" />
         </div>
-        <div className="search">
+      <Link to={"/"}>
+        <div className="logo">
+          <h1 className="text-4xl w-40 text-center">•✕•</h1>
+        </div>
+      </Link>
+      <div className="cart-button">
+        <a
+          role="button"
+          onClick={() => document.getElementsByClassName("cart")[0].classList.remove("disabled")}
+        >
           <img src={reactLogo} alt="" srcSet="" />
-        </div>
+        </a>
       </div>
-      <div className="logo">
-        <h1 className="text-4xl">•✕•</h1>
-      </div>
-        <div className="cart">
-          <a role="button" onClick={() => document.getElementsByClassName("cartBar")[0].classList.remove("disabled")}>
-              <img src={reactLogo} alt="" srcSet="" />
-          </a>
-        </div>
     </div>
   );
 }
@@ -65,14 +64,14 @@ type Product = {
 };
 
 function Content() {
-  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cartItems") || "[]")
+  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cartItems") || "[]");
 
   const [items, setItems] = useState<Product[]>([]);
   const [cartItems, setCartItems] = useState<Product[]>(cartFromLocalStorage);
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    console.log('Wrote ' + JSON.stringify(cartItems) + ' to localStorage');
+    console.log("Wrote " + JSON.stringify(cartItems) + " to localStorage");
   }, [cartItems]);
 
   useEffect(() => {
@@ -84,14 +83,10 @@ function Content() {
   return (
     <>
       <div className="content">
-        <div className="itemContainer">
+        <div className="item-container">
           {items.map((item) => (
             // <a role='button' tabIndex={0} onClick={() => setCartItems(cartItems.concat(item))}>
-            <Link
-              state={cartItems}
-              key={item.id}
-              to={"/products/" + item.id.toString()}>
-              
+            <Link state={cartItems} key={item.id} to={"/products/" + item.id.toString()}>
               <Item
                 id={item.id}
                 price={item.price}
@@ -99,7 +94,7 @@ function Content() {
                 image={item.image}
                 addCartItems={(it: Product) => {
                   setCartItems(cartItems.concat(it));
-                  console.log({cartItems});
+                  console.log({ cartItems });
                 }}
               ></Item>
             </Link>
@@ -123,27 +118,28 @@ function Content() {
 //   itemId: number;
 //   itemImg: string;
 // }
-  // addCartItems: (item: Product) => void,
-const Item = ({id, title, price, description, category, image, addCartItems} : Product) => {
+// addCartItems: (item: Product) => void,
+const Item = ({ id, title, price, description, category, image, addCartItems }: Product) => {
   return (
     <>
       <div className="item">
-        <div className="imgContainer">
+        <div className="img-container">
           <img src={image} alt="" srcSet="" />
         </div>
-        <h3 className="text-sm">{title}</h3>
-        <h4 className="text-sm">${price}</h4>
-        <div className="itemColors">
+        <h3 className="text-med">{title.substring(0, 15)}</h3>
+        <h4 className="text-sm font-medium">${price}</h4>
+        <div className="item-colors">
           <img src={reactLogo} alt="" srcSet="" />
           <img src={reactLogo} alt="" srcSet="" />
         </div>
-        <button
+        <h4 className="text-sm">Bifold wallet</h4>
+        {/* <button
           className="w-24 h-24 bg-slate-500 z-10"
           onClick={(e) => {
             e.preventDefault();
             addCartItems({ id, title, price, description, category, image } as Product);
           }}
-        ></button>
+        ></button> */}
       </div>
     </>
   );
@@ -151,15 +147,15 @@ const Item = ({id, title, price, description, category, image, addCartItems} : P
 
 const CartItem = ({ id, title, price, image, quantity }: Product) => {
   return (
-    <div className="flex">
-      <div className="cartItemImgContainer">
-        <img src="itemImg" alt="" />
+    <div className="cart-item">
+      <div className="cart-item-image-container">
+        <img src={image} alt="" />
       </div>
-      <div className="flex flex-col">
-        <h3 className="text-sm">{title}</h3>
+      <div className="cart-item-text">
+        <h3 className="text-lg">{title.substring(0, 15)}</h3>
         <div className="flex justify-between">
           <h4 className="text-sm">${price}</h4>
-          <h4 className="text-sm">x {quantity}</h4>
+          <h4 className="text-sm font-medium">x {quantity}</h4>
         </div>
       </div>
     </div>
@@ -167,24 +163,28 @@ const CartItem = ({ id, title, price, image, quantity }: Product) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Cart = ({items} : any) => {
+const Cart = ({ items }: any) => {
   return (
-    <div className = "cartBar disabled ">
-      <div className="cartSticky">
-          <a role="button" onClick={() => document.getElementsByClassName("cartBar")[0].classList.add("disabled")}>
+    <div className="cart disabled ">
+      <div className="cart-header">
+        <h2 className="text-2xl">Cart</h2>
+        <a
+          role="button"
+          onClick={() => document.getElementsByClassName("cart")[0].classList.add("disabled")}
+        >
           <img src={reactLogo} alt="" />
         </a>
-        {items.map((item) => (
-         <CartItem
-            key={item.id}
-            id={item.id}
-            price={item.price}
-            title={item.title}
-            image={item.image}
-            quantity={item.quantity}
-          ></CartItem>
-        ))}
       </div>
+      {items.map((item) => (
+        <CartItem
+          key={item.id}
+          id={item.id}
+          price={item.price}
+          title={item.title}
+          image={item.image}
+          quantity={item.quantity}
+        ></CartItem>
+      ))}
     </div>
   );
 };
