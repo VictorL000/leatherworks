@@ -6,7 +6,8 @@ import xsvg from "./assets/x.svg";
 import "./output.css";
 import { Link } from "react-router-dom";
 
-const Context = createContext({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Context = createContext({} as any);
 
 function App() {
   return (
@@ -68,7 +69,7 @@ type Product = {
   image: string;
   images: string[];
   quantity: number;
-  addCartItems: (item: Product) => void;
+  addCartItems?: (item: Product) => void;
 };
 
 function Content() {
@@ -83,7 +84,7 @@ function Content() {
   }, [cartItems]);
 
   useEffect(() => {
-    const response = fetch("http://143.110.158.216:5000/products", {"mode": "cors"})
+    fetch("http://143.110.158.216:5000/products", {"mode": "cors"})
       .then((res) => { console.log(res) ;return res.json();  })
       .then((json) => setItems(json));
     // console.log(response);
@@ -100,6 +101,8 @@ function Content() {
                 price={item.price}
                 title={item.title}
                 images={item.images}
+                image={item.images[0]}
+                quantity={1}
                 addCartItems={(it: Product) => {
                   setCartItems(cartItems.concat(it));
                   console.log({ cartItems });
@@ -129,7 +132,7 @@ function Content() {
 //   itemImg: string;
 // }
 // addCartItems: (item: Product) => void,
-const Item = ({ id, title, price, description, category, images, addCartItems }: Product) => {
+const Item = ({title, price, images}: Product) => {
   return (
     <>
       <div className="item">
@@ -168,7 +171,7 @@ const CartItem = ({ id, title, price, images, quantity}: Product) => {
           <h3 className="text-lg font-medium">{title}</h3>
           <button type="button" onClick={(e) => {
             e.preventDefault();
-            const dupIdx = cartItems.findIndex((item) => item.id === id);
+            const dupIdx = cartItems.findIndex((item: Product) => item.id === id);
             const updatedCart = [...cartItems];
             updatedCart[dupIdx].quantity--;
             if (updatedCart[dupIdx].quantity === 0) {
@@ -207,7 +210,7 @@ const Cart = ({ items }: any) => {
           </a>
         </div>
       </div>
-      {items.map((item) => (
+      {items.map((item: Product) => (
         <CartItem
           key={item.id}
           id={item.id}

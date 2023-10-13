@@ -1,7 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Header, Footer, Cart } from "./App";
-import { colorLookup, imgLookupFn } from "./colors.js";
+import { colorLookup, imgLookupFn } from "./colors.ts";
 
 import {Context} from "./App";
 
@@ -37,14 +37,19 @@ const ItemPage = () => {
   }, [cartItems]);
 
   useEffect(() => {
-    const response = fetch(`http://143.110.158.216:5000/products/${id}`, {"mode": "cors"})
+    fetch(`http://143.110.158.216:5000/products/${id}`, {"mode": "cors"})
       .then((res) => res.json())
       .then((json) => { setProperties(json); setCurrentImg(json.images[0]); setCurrentColor(json.colors[0])});
   }, [id]);
-  const ImageFullscreen = ({image}) => {
+
+  type ImageFullscreenProps = {
+    image: string;
+  }
+
+  const ImageFullscreen = ({image}: ImageFullscreenProps) => {
     return (
       <button type="button" className="fullscreen-container" onClick={() => setFullscreenImg(false)}>
-        <img src={image} alt="Image fullscreen" srcset="" className="cursor-default" onClick={(e) => e.stopPropagation()}/>
+        <img src={image} alt="Image fullscreen" srcSet="" className="cursor-default" onClick={(e) => e.stopPropagation()}/>
       </button>
     );
   }
@@ -83,7 +88,7 @@ const ItemPage = () => {
             <h3 className="font-semibold tracking-tight inline">Select Colour: </h3>
             <h4 className="inline">{currentColor}</h4>
             <div className="mt-4 flex gap-3">
-              {properties?.colors.map((color) => (
+              {properties?.colors.map((color: string) => (
                 <button type="button" onClick={() => setCurrentColor(color)}>
                   <div className="color-dot shadow" style={{ "backgroundColor": colorLookup[color] }}></div>
                 </button>
