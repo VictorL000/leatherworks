@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Header, Footer, Cart } from "./App";
-import reactLogo from "./assets/react.svg";
+import { colorLookup, imgLookupFn } from "./colors.js";
+
+import {Context} from "./App";
 
 type Product = {
   id: number;
@@ -10,6 +12,10 @@ type Product = {
   description: string;
   category: string;
   image: string;
+  images: string[];
+  features: string[];
+  colors: string[];
+  insights: string[];
   quantity: number;
 };
 
@@ -20,6 +26,9 @@ const ItemPage = () => {
   const { id } = useParams<{ id?: string }>();
   const [properties, setProperties] = useState<Product>();
   const [cartItems, setCartItems] = useState<Product[]>(cartFromLocalStorage);
+  const [currentImg, setCurrentImg] = useState<string>("");
+  const [currentColor, setCurrentColor] = useState<string>("");
+  const [fullscreenImg, setFullscreenImg] = useState<boolean>(false);
 
   console.log("cartFromLocalStorage is " + cartItems);
   useEffect(() => {
@@ -28,102 +37,125 @@ const ItemPage = () => {
   }, [cartItems]);
 
   useEffect(() => {
-    fetch(`https://fakestoreapi.com/products/${id}`)
+    const response = fetch(`http://143.110.158.216:5000/products/${id}`, {"mode": "cors"})
       .then((res) => res.json())
-      .then((json) => setProperties(json));
+      .then((json) => { setProperties(json); setCurrentImg(json.images[0]); setCurrentColor(json.colors[0])});
   }, [id]);
+  const ImageFullscreen = ({image}) => {
+    return (
+      <button type="button" className="fullscreen-container" onClick={() => setFullscreenImg(false)}>
+        <img src={image} alt="Image fullscreen" srcset="" className="cursor-default" onClick={(e) => e.stopPropagation()}/>
+      </button>
+    );
+  }
 
   return (
     <>
       <Header></Header>
-      <div className="breadcrumb">
-        <Link to={"/"}>
-          <h4 className="text-lg underline inline-block mr-1.5">Home</h4>
-        </Link>
-        <h4 className="text-lg italic inline-block"> &gt; Bifold Wallet</h4>
-      </div>
-      <div className="item-page-container">
-        <div className="img-container">
-          <img src={properties?.image} alt={properties?.title} />
-          <div className="carousel flex gap-4 mt-8">
-            <button>
-              <img src={reactLogo} alt={properties?.title} />
-            </button>
-            <img src={reactLogo} alt={properties?.title} />
-            <img src={reactLogo} alt={properties?.title} />
-            <img src={reactLogo} alt={properties?.title} />
-            <img src={reactLogo} alt={properties?.title} />
-          </div>
+      <div className="item-page-container-container">
+        <div className="breadcrumb">
+          <Link to={"/"}>
+            <h4 className="text-lg underline inline-block mr-1.5">Home</h4>
+          </Link>
+          <h4 className="text-lg italic inline-block"> &gt; Bifold Wallet</h4>
         </div>
-        <div className="item-info">
-          <h1>{properties?.title}</h1>
-          <div className="price flex items-start my-1">
-            <span>${properties?.price}</span>
-            <span className="text-sm ml-1 pt-0.5">CAD</span>
-          </div>
-          <div className="separate"></div>
-          <h5 className=" my-4">{properties?.description}</h5>
-          <h3 className="font-bold tracking-tight inline">Select Colour:</h3>
-          <h4 className=" inline"> Hazelnut</h4>
-          <div className="mt-4">
-            <button>
-              <img src={reactLogo} alt="" />
+        <div className="item-page-container">
+          <div className="img-container">
+            <button type="button" onClick={() => setFullscreenImg(true)}>
+              <img src={currentImg} alt={properties?.title} />
             </button>
-          </div>
-          <button
-            className="bg-slate-500 z-10 add-to-cart"
-            onClick={(e) => {
-              e.preventDefault();
-              // addCartItems({ id, title, price, description, category, image } as Product);
-              // addCartItems={(it: Product) => {
-              if (cartItems.find((item) => item.id === properties?.id)) {
-                console.log("found duplicate");
-                const dupIdx = cartItems.findIndex((item) => item.id === properties?.id);
-                const updatedCart = [...cartItems];
-                updatedCart[dupIdx].quantity++;
-                setCartItems(updatedCart);
-              } else {
-                setCartItems(cartItems.concat({...properties!, quantity: 1}));
-              }
-              // console.log(cartItems);
-            }}
-          >
-            <h4>Add to Cart</h4>
-          </button>
-
-          <div className="insights mb-4">
-            <h4 className=" font-bold">Design Insights:</h4>
-            <ul>
-              <li>IInsight 1Insight 1Insight 1Insight 1nsight 1</li>
-              <li>Insight 2</li>
-              <li>Insight 3</li>
-              <li>Insight 4</li>
-              <li>Insight 5</li>
-            </ul>
-          </div>
-
-          <div className="feature-container flex  justify-between">
-            <div className="feature">
-              <img src={reactLogo} alt="" />
-              <h5>Fits 10-11 cards</h5>
-            </div>
-            <div className="feature">
-              <img src={reactLogo} alt="" />
-            </div>
-            <div className="feature">
-              <img src={reactLogo} alt="" />
+            <div className="carousel flex gap-4 mt-7">
+              {properties?.images.map((image) => (
+                <button type="button" onClick={() => setCurrentImg(image)}>
+                  <img src={image} alt={properties?.title} />
+                </button>
+              ))}
             </div>
           </div>
+          <div className="item-info">
+            <h1 className="font-semibold">{properties?.title}</h1>
+            <div className="price flex items-start my-1">
+              <span>${properties?.price}</span>
+              <span className="text-sm ml-1 pt-0.5">CAD</span>
+            </div>
+            <div className="separate"></div>
+            <h5 className=" my-4">{properties?.description}</h5>
+            <h3 className="font-semibold tracking-tight inline">Select Colour: </h3>
+            <h4 className="inline">{currentColor}</h4>
+            <div className="mt-4 flex gap-3">
+              {properties?.colors.map((color) => (
+                <button type="button" onClick={() => setCurrentColor(color)}>
+                  <div className="color-dot shadow" style={{ "backgroundColor": colorLookup[color] }}></div>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="z-10 add-to-cart shadow"
+              onClick={(e) => {
+                e.preventDefault();
+                // addCartItems({ id, title, price, description, category, image } as Product);
+                // addCartItems={(it: Product) => {
+                if (cartItems.find((item) => item.id === properties?.id)) {
+                  console.log("found duplicate");
+                  const dupIdx = cartItems.findIndex((item) => item.id === properties?.id);
+                  const updatedCart = [...cartItems];
+                  updatedCart[dupIdx].quantity++;
+                  setCartItems(updatedCart);
+                } else {
+                  setCartItems(cartItems.concat({...properties!, quantity: 1}));
+                }
+                // console.log(cartItems);
+              }}
+            >
+              <h4>Add to Cart</h4>
+            </button>
 
-          {/* <div className="specifications mt-5">
-            <h4>Specifications</h4>
-          </div> */}
+            <div className="feature-container flex  justify-between">
+              <div className="feature">
+                <img src={imgLookupFn(properties?.features[0] || "")} alt="" />
+                <h5>{properties?.features[0]}</h5>
+              </div>
+              <div className="feature">
+                <img src={imgLookupFn(properties?.features[1] || "")} alt="" />
+                <h5>{properties?.features[1]}</h5>
+              </div>
+              <div className="feature">
+                <img src={imgLookupFn(properties?.features[2] || "")} alt="" />
+                <h5>{properties?.features[2]}</h5>
+              </div>
+            </div>
+
+            <div className="insights my-4">
+              <h4 className="font-semibold">Design Insights:</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit consequat neque, sodales accumsan risus faucibus id. Suspendisse ut felis pharetra, mollis lorem vel, volutpat ex.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit consequat neque, sodales accumsan risus faucibus id. Suspendisse ut felis pharetra, mollis lorem vel, volutpat ex.</li>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit consequat neque, sodales accumsan risus faucibus id. Suspendisse ut felis pharetra, mollis lorem vel, volutpat ex.</li>
+              </ul>
+            </div>
+            <div className="insights my-4">
+              <h4 className="font-semibold">Materials and Construction</h4>
+              <ul>
+                <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum hendrerit consequat neque, sodales accumsan risus faucibus id. Suspendisse ut felis pharetra, mollis lorem vel, volutpat ex.</li>
+              </ul>
+            </div>
+
+
+            {/* <div className="specifications mt-5">
+              <h4>Specifications</h4>
+            </div> */}
+          </div>
         </div>
       </div>
       <Footer></Footer>
-      <Cart items={cartItems}></Cart>
+      <Context.Provider value={{ cartItems, setCartItems }}>
+        <Cart items={cartItems}></Cart>
+      </Context.Provider>
+      {fullscreenImg ? <ImageFullscreen image={currentImg}></ImageFullscreen> : null}
     </>
   );
 };
+
 
 export default ItemPage;

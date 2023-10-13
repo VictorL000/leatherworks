@@ -1,9 +1,12 @@
 // import { useState } from 'react'
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
+import xsvg from "./assets/x.svg";
 // import viteLogo from '/vite.svg'
 import "./output.css";
 import { Link } from "react-router-dom";
+
+const Context = createContext({});
 
 function App() {
   return (
@@ -19,7 +22,7 @@ function Header() {
   return (
     <div className="header">
         <div className="hamburger">
-          <img src={reactLogo} alt="" srcSet="" />
+          {/* <img src={reactLogo} alt="" srcSet="" /> */}
         </div>
       <Link to={"/"}>
         <div className="logo">
@@ -31,7 +34,11 @@ function Header() {
           role="button"
           onClick={() => document.getElementsByClassName("cart")[0].classList.remove("disabled")}
         >
-          <img src={reactLogo} alt="" srcSet="" />
+          <svg viewBox="0 0 31 28">
+                    <circle cx="13" cy="24" r="2"></circle><circle cx="24" cy="24" r="2"></circle>
+                    <path d="M1.5 2h3s1.5 0 2 2l4 13s.4 1 1 1h13s3.6-.3 4-4l1-5s0-1-2-1h-19"></path>
+          </svg>
+          {/* <img src={reactLogo} alt="" srcSet="" /> */}
         </a>
       </div>
     </div>
@@ -59,6 +66,7 @@ type Product = {
   description?: string;
   category?: string;
   image: string;
+  images: string[];
   quantity: number;
   addCartItems: (item: Product) => void;
 };
@@ -75,11 +83,11 @@ function Content() {
   }, [cartItems]);
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
+    const response = fetch("http://143.110.158.216:5000/products", {"mode": "cors"})
+      .then((res) => { console.log(res) ;return res.json();  })
       .then((json) => setItems(json));
+    // console.log(response);
   }, []);
-
   return (
     <>
       <div className="content">
@@ -91,7 +99,7 @@ function Content() {
                 id={item.id}
                 price={item.price}
                 title={item.title}
-                image={item.image}
+                images={item.images}
                 addCartItems={(it: Product) => {
                   setCartItems(cartItems.concat(it));
                   console.log({ cartItems });
@@ -107,7 +115,9 @@ function Content() {
           <div className="item phantom"></div>
         </div>
       </div>
-      <Cart items={cartItems}></Cart>
+      <Context.Provider value={{ cartItems, setCartItems }}>
+        <Cart items={cartItems}></Cart>
+      </Context.Provider>
     </>
   );
 }
@@ -119,12 +129,12 @@ function Content() {
 //   itemImg: string;
 // }
 // addCartItems: (item: Product) => void,
-const Item = ({ id, title, price, description, category, image, addCartItems }: Product) => {
+const Item = ({ id, title, price, description, category, images, addCartItems }: Product) => {
   return (
     <>
       <div className="item">
         <div className="img-container">
-          <img src={image} alt="" srcSet="" />
+          <img src={images[0]} alt="" srcSet="" />
         </div>
         <h3 className="text-med">{title.substring(0, 15)}</h3>
         <h4 className="text-sm font-medium">${price}</h4>
@@ -145,14 +155,30 @@ const Item = ({ id, title, price, description, category, image, addCartItems }: 
   );
 };
 
-const CartItem = ({ id, title, price, image, quantity }: Product) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CartItem = ({ id, title, price, images, quantity}: Product) => {
+  const { cartItems, setCartItems } = useContext(Context);
   return (
     <div className="cart-item">
       <div className="cart-item-image-container">
-        <img src={image} alt="" />
+        <img src={images[0]} alt="" />
       </div>
       <div className="cart-item-text">
-        <h3 className="text-lg">{title.substring(0, 15)}</h3>
+        <div className="flex justify-between ">
+          <h3 className="text-lg font-medium">{title}</h3>
+          <button type="button" onClick={(e) => {
+            e.preventDefault();
+            const dupIdx = cartItems.findIndex((item) => item.id === id);
+            const updatedCart = [...cartItems];
+            updatedCart[dupIdx].quantity--;
+            if (updatedCart[dupIdx].quantity === 0) {
+              updatedCart.splice(dupIdx, 1);
+            }
+            setCartItems(updatedCart);
+          }}>
+            <img src={xsvg} alt=""/>
+          </button>
+        </div>
         <div className="flex justify-between">
           <h4 className="text-sm">${price}</h4>
           <h4 className="text-sm font-medium">x {quantity}</h4>
@@ -168,12 +194,18 @@ const Cart = ({ items }: any) => {
     <div className="cart disabled ">
       <div className="cart-header">
         <h2 className="text-2xl">Cart</h2>
-        <a
-          role="button"
-          onClick={() => document.getElementsByClassName("cart")[0].classList.add("disabled")}
-        >
-          <img src={reactLogo} alt="" />
-        </a>
+        <div className="cart-button">
+          <a
+            role="button"
+            onClick={() => document.getElementsByClassName("cart")[0].classList.add("disabled")}
+          >
+            {/* <img src={reactLogo} alt="" /> */}
+            <svg viewBox="0 0 31 31">
+              <circle cx="13" cy="24" r="2"></circle><circle cx="24" cy="24" r="2"></circle>
+              <path d="M1.5 2h3s1.5 0 2 2l4 13s.4 1 1 1h13s3.6-.3 4-4l1-5s0-1-2-1h-19"></path>
+            </svg>
+          </a>
+        </div>
       </div>
       {items.map((item) => (
         <CartItem
@@ -181,7 +213,8 @@ const Cart = ({ items }: any) => {
           id={item.id}
           price={item.price}
           title={item.title}
-          image={item.image}
+          images={item.images}
+          image={item.images[0]}
           quantity={item.quantity}
         ></CartItem>
       ))}
@@ -191,4 +224,4 @@ const Cart = ({ items }: any) => {
 
 export default App;
 
-export { Header, Footer, Cart };
+export { Header, Footer, Cart, Context };
