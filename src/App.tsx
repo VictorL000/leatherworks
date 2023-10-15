@@ -50,7 +50,6 @@ function Footer() {
   return (
     <div className="footer">
       <div className="insta">
-        <img src={reactLogo} alt="" srcSet="" />
       </div>
       <h2>
         <a href="">Contact</a>
@@ -132,7 +131,7 @@ function Content() {
 //   itemImg: string;
 // }
 // addCartItems: (item: Product) => void,
-const Item = ({title, price, images}: Product) => {
+const Item = ({title, price, images, colors}: Product) => {
   return (
     <>
       <div className="item">
@@ -142,8 +141,9 @@ const Item = ({title, price, images}: Product) => {
         <h3 className="text-med">{title.substring(0, 15)}</h3>
         <h4 className="text-sm font-medium">${price}</h4>
         <div className="item-colors">
-          <img src={reactLogo} alt="" srcSet="" />
-          <img src={reactLogo} alt="" srcSet="" />
+          <div className="color-dot shadow" style={{ "backgroundColor": "#BFA67A" }}></div>
+          <div className="color-dot shadow" style={{ "backgroundColor": "#4d2c2d" }}></div>
+          <div className="color-dot shadow" style={{ "backgroundColor": "#3f2913" }}></div>
         </div>
         <h4 className="text-sm">Bifold wallet</h4>
         {/* <button

@@ -1,5 +1,18 @@
-# leatherworks
+# Leatherworks
 
-IT'S IN DEVELOPMENT!!
+Online catalogue using React, Typescript, Sass, Tailwind CSS, and React Router, with ASP.NET Core and MongoDB on the backend.
 
-It will be done soon I promise!! 🥲🙏
+Dynamically loads content from backend, and features a persistent cart using local storage.
+
+Unfortunately, the demo does not work due to not having a CA Certificate.
+
+## Screenshots
+
+![Leatherworks home page](screenshots/schome.png)
+*Leatherworks home page*
+
+![Leatherworks item page](screenshots/scitem.png)
+*Leatherworks item page*
+
+![Leatherworks cart](screenshots/sccart.png)
+*Leatherworks cart*

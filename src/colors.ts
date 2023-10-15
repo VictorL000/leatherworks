@@ -10,8 +10,8 @@ const colorLookup: ColorLookup= {
 
 const imgLookup: {[key: string]: string} = {
   "cards": "./assets/cards.svg",
-  "storage": "./assets/coins.svg",
-  "pouch": "./assets/pull-tab.svg",
+  "storage": "/assets/coins.svg",
+  "pouch": "/assets/pull-tab.svg",
 }
 
 const imgLookupFn = (text: string) => {

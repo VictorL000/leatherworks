@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Header, Footer, Cart } from "./App";
 import { colorLookup, imgLookupFn } from "./colors.ts";
+import cards from "./assets/cards.svg";
+import coins from "./assets/coins.svg";
+import pulltab from "./assets/pull-tab.svg";
 
 import {Context} from "./App";
 
@@ -118,15 +121,15 @@ const ItemPage = () => {
 
             <div className="feature-container flex  justify-between">
               <div className="feature">
-                <img src={imgLookupFn(properties?.features[0] || "")} alt="" />
+                <img src={cards} alt="" />
                 <h5>{properties?.features[0]}</h5>
               </div>
               <div className="feature">
-                <img src={imgLookupFn(properties?.features[1] || "")} alt="" />
+                <img src={pulltab} alt="" />
                 <h5>{properties?.features[1]}</h5>
               </div>
               <div className="feature">
-                <img src={imgLookupFn(properties?.features[2] || "")} alt="" />
+                <img src={coins} alt="" />
                 <h5>{properties?.features[2]}</h5>
               </div>
             </div>
