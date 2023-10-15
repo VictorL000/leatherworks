@@ -6,6 +6,8 @@ Dynamically loads content from backend, and features a persistent cart using loc
 
 Unfortunately, the demo does not work due to not having a CA Certificate.
 
+These wallets are actually made by me :)
+
 ## Screenshots
 
 ![Leatherworks home page](screenshots/schome.png)
