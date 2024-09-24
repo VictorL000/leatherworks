@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Header, Footer, Cart } from "./App";
-import { colorLookup, imgLookupFn } from "./colors.ts";
+// import { colorLookup, imgLookupFn } from "./colors.ts";
+import { colorLookup } from "./colors.ts";
 import cards from "./assets/cards.svg";
 import coins from "./assets/coins.svg";
 import pulltab from "./assets/pull-tab.svg";

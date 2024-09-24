@@ -1,6 +1,5 @@
 // import { useState } from 'react'
 import { createContext, useContext, useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import xsvg from "./assets/x.svg";
 // import viteLogo from '/vite.svg'
 import "./output.css";
@@ -131,7 +130,7 @@ function Content() {
 //   itemImg: string;
 // }
 // addCartItems: (item: Product) => void,
-const Item = ({title, price, images, colors}: Product) => {
+const Item = ({title, price, images}: Product) => {
   return (
     <>
       <div className="item">
