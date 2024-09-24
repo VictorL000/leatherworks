@@ -54,7 +54,7 @@ function Footer() {
       <h2>
         <a href="">Contact</a>
       </h2>
-      <h6 className="copyright">2023</h6>
+      <h6 className="copyright">2024</h6>
     </div>
   );
 }
@@ -83,7 +83,7 @@ function Content() {
   }, [cartItems]);
 
   useEffect(() => {
-    fetch("http://143.110.158.216:5000/products", {"mode": "cors"})
+    fetch("http://69.55.55.63:5000/products", {"mode": "cors"})
       .then((res) => { console.log(res) ;return res.json();  })
       .then((json) => setItems(json));
     // console.log(response);
@@ -138,7 +138,7 @@ const Item = ({title, price, images, colors}: Product) => {
         <div className="img-container">
           <img src={images[0]} alt="" srcSet="" />
         </div>
-        <h3 className="text-med">{title.substring(0, 15)}</h3>
+        <h3 className="text-med">{title}</h3>
         <h4 className="text-sm font-medium">${price}</h4>
         <div className="item-colors">
           <div className="color-dot shadow" style={{ "backgroundColor": "#BFA67A" }}></div>

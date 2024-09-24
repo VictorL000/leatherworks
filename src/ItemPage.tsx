@@ -40,7 +40,7 @@ const ItemPage = () => {
   }, [cartItems]);
 
   useEffect(() => {
-    fetch(`http://143.110.158.216:5000/products/${id}`, {"mode": "cors"})
+    fetch(`http://69.55.55.63:5000/products/${id}`, {"mode": "cors"})
       .then((res) => res.json())
       .then((json) => { setProperties(json); setCurrentImg(json.images[0]); setCurrentColor(json.colors[0])});
   }, [id]);
